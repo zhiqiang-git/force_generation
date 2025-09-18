@@ -4,3 +4,4 @@ MATLAB/cvx/*
 .dist
 .vscode
 __pycache__
+python/sdf_gen/
