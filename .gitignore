@@ -1,0 +1,6 @@
+python/data/*
+MATLAB/data/*
+MATLAB/cvx/*
+.dist
+.vscode
+__pycache__
