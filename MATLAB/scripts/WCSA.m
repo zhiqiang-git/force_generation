@@ -122,7 +122,7 @@ if eigen_id == 0
             %     p_opt(activeBVIds) = p;
             %     F_tot_opt = F_tot;
             % end
-    
+            % This regulation seems not satisfied.
             u_opt = C_star\[OPT.mat_NA*p;zeros(6,1)];
             u_opt = u_opt(1:(3*numV));
             stress_ms = StressProcessing(OPT, u_opt, 1);

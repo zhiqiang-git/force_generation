@@ -30,6 +30,12 @@ def get_color_quantity(mapping, region, bV, color_id):
     color[bregion, :] = np.tile(rgb, (bregion.shape[0], 1))
     return color
 
+def get_bweakregion_color(bweakregion, bV):
+    color = np.tile(background_color, (bV, 1))
+    color[bweakregion, :] = np.tile((1.0, 1.0, 0.0), (bweakregion.shape[0], 1))
+    return color
+
+
 def get_cluster_region(labels, All_WRIds):
     n_labels = labels.max()+1
     flag_labels = np.sum(labels==-1)>0

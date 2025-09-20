@@ -1,7 +1,10 @@
-python/data/*
-MATLAB/data/*
-MATLAB/cvx/*
+python/data/
+MATLAB/data/
+MATLAB/cvx/
 .dist
 .vscode
 __pycache__
 python/sdf_gen/
+python/.polyscope.ini
+python/imgui.ini
+test.*

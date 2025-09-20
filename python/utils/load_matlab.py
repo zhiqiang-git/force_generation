@@ -7,6 +7,11 @@ def load_matlab(filename):
     data = loadmat(filename)
     OPT = data['OPT']
     Tet = data['Tet']
+    best_eid = data['eigenmode_id'].item() - 1
+    best_wid = data['weakregion_id'].item() - 1
+    p = data['p_all']
+    u = data['u_all']
+    s = data['stress_all']
 
     # Tetrahedron mesh basic info
     vertexPos = Tet['vertexPoss'][0, 0][:3, :]     # size[3, V]
@@ -15,7 +20,9 @@ def load_matlab(filename):
     bvIndices = bvIndices - 1                      # size[1, bV]       
     bFacesVIds = Tet['boundaryFaceVIds'][0, 0] - 1 # size[3, bF]
     bFacesTIds = Tet['boundaryFaceTIds'][0, 0] - 1 # size[1, bF]
-
+    bvNorms = Tet['vertexNors'][0, 0][:, bvIndices[0]]          # size[3, bV]
+    bvAreas = Tet['boundaryVertexArea'][0, 0][:, bvIndices[0]] # size[1, bV]
+    
     V = vertexPos.shape[1]
     T = tetFaces.shape[1]
     bV = bvIndices.shape[1]
@@ -53,6 +60,7 @@ def load_matlab(filename):
             'tetFaces': tetFaces,
             'bvIndices': bvIndices,
             'bvNorms': bvNorms,
+            'bvAreas': bvAreas,
             'bFacesVIds': bFacesVIds,
             'bVertices': bVertices,
             'bFacesTIds': bFacesTIds,
@@ -70,5 +78,12 @@ def load_matlab(filename):
             'numEigenModes': numEigenModes,
             'numWeakRegions': numWeakRegions,
         },
+        'results': {
+            'best_eid': best_eid,
+            'best_wid': best_wid,
+            'p_all': p,
+            'u_all': u,
+            'stress_all': s,
+        }
     }
     return data_dict

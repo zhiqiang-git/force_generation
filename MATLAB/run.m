@@ -19,8 +19,8 @@ numEigens=15;
 eps = 0.025;
 M_r = 5;
 OPT = WCSA_Prepare(Tet, Basis, OPT, eps, M_r);
-p_max = 1;
-F_tot_ratio = 0.0001;
+p_max = 1e2;
+F_tot_ratio = 1;
 [score_opt, p_opt, stress_opt, F_tot_opt, eigenmode_id, weakregion_id, u_all, p_all, stress_all]...
     = WCSA(OPT, p_max, F_tot_ratio, 0, 0);
 save(save_name, 'Basis', 'OPT', 'eigenmode_id', 'weakregion_id', 'p_all', 'u_all', 'stress_all', 'Tet');
