@@ -46,7 +46,9 @@ if __name__ == "__main__":
     NW = data_dict['parameters']['numWeakRegions']
     N = NE * NW
     bV = data_dict['parameters']['bV']
-
+    T = data_dict['parameters']['T']
+    bF = data_dict['parameters']['bF']
+    import pdb; pdb.set_trace()
     # visualization of the optimized pressure results
     ps.init()
 
