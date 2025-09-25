@@ -5,6 +5,7 @@ import numpy as np
 
 def load_matlab(filename):
     data = loadmat(filename)
+    Basis = data['Basis']
     OPT = data['OPT']
     Tet = data['Tet']
     best_eid = data['eigenmode_id'].item() - 1
@@ -28,7 +29,7 @@ def load_matlab(filename):
     bV = bvIndices.shape[1]
     bF = bFacesVIds.shape[1]
     numEigenModes = 15
-    numWeakRegions = 5
+    numWeakRegions = 0
     
     vertexPos = np.array(vertexPos)
     tetFaces = np.array(tetFaces)
@@ -43,10 +44,13 @@ def load_matlab(filename):
     bVertices = vertexPos[:, bvIndices[0]]
 
     # Weak region info
+    eigenvectors = Basis['eigenVecs'][0, 0].reshape(V, -1, 15)  # size[V, 3, 15]
     All_WRIds = []
     All_bWRIds = []
     for eid in range(numEigenModes):
-        for wid in range(numWeakRegions):
+        numWRIds = OPT['weakRegions'][0, 0][0, eid].shape[1]
+        numWeakRegions += numWRIds
+        for wid in range(numWRIds):
             WRIds = OPT['weakRegions'][0, 0][0, eid][0, wid] - 1
             bWRIds = mapping[WRIds]
             bWRIds = bWRIds[bWRIds != -1]
@@ -67,6 +71,7 @@ def load_matlab(filename):
             'mapping': mapping,
         },
         'weak_regions': {
+            'eigenvectors': eigenvectors,
             'All_WRIds': All_WRIds,
             'All_bWRIds': All_bWRIds,
         },

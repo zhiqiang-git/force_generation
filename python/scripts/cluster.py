@@ -71,7 +71,7 @@ def Laplacian_Matrix(vertexPos, tetFaces):
     D = sp.diags(D)
     return LM, D, A
 
-def Eigen_Space(LM, eigens=120):
+def Eigen_Space(LM, eigens=100):
     # At last we just compute the eigenvectors of matrix LM
     evals, evecs = eigsh(LM, k=eigens+1, which='SM')
     order = np.argsort(evals)              # ascending
@@ -150,6 +150,18 @@ def HDBSCAN_Clustering(Indicators,
     # Project indicators into eigenspace with normalization
     LM, D, A = Laplacian_Matrix(vertexPos, tetFaces)
     evals, evecs = Eigen_Space(LM)
+    
+    # indicator = Indicators[:, 28]
+    # p_coord, p_indicator = project_one_indicator(evecs, evals, indicator)
+    # verts = vertexPos.T.copy()
+    # tets  = tetFaces.T.copy()
+    # ps.init()
+    # vol = ps.register_volume_mesh("tet mesh", verts, tets=tets, interior_color=(0.9,0.9,0.9))
+    # vol.set_transparency(0.2)
+    # vol.add_scalar_quantity('wr', indicator.flatten(), defined_on='vertices', cmap='viridis', enabled=True)
+    # vol.add_scalar_quantity('wrp', p_indicator.flatten(), defined_on='vertices', cmap='viridis', enabled=True)
+    # ps.show()
+    
     p_coords = project_indicators(evecs, evals, Indicators)
     # using Euclidean distance in the projected space
     Dist_2 = np.full((N, N), 2.0+1e-8) - 2*(p_coords.T@p_coords)
@@ -195,15 +207,18 @@ if __name__ == "__main__":
     V = params['V']
     numEigenModes = params['numEigenModes']
     numWeakRegions = params['numWeakRegions']
-    N = numEigenModes * numWeakRegions
+    N = numWeakRegions
+
+    vertexPos = data_dict['mesh_info']['vertexPos']
+    tetFaces = data_dict['mesh_info']['tetFaces']
 
     indicators = np.zeros((V, N))
     for i in range(N):
-        WRIds = weak_regions['All_WRIds'][i] - 1
+        WRIds = weak_regions['All_WRIds'][i]
         indicators[WRIds, i] = 1.0
 
-    # labels = HDBSCAN_Clustering(indicators, vertexPos, tetFaces)
-    labels = Graph_Clustering(indicators)
+    labels = HDBSCAN_Clustering(indicators, vertexPos, tetFaces)
+    # labels = Graph_Clustering(indicators)
 
     n_labels = labels.max()+1
     flag_labels = np.sum(labels==-1)>0

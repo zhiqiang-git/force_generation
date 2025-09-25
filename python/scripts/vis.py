@@ -7,7 +7,8 @@ import polyscope.imgui as psim
 import polyscope.implot as psimplot
 import random
 
-ids = random.sample(range(75), 10)
+# ids = random.sample(range(75), 10)
+ids = range(5)
 ids_str = []
 for i in ids:
     ids_str.append(str(i))
@@ -44,11 +45,11 @@ if __name__ == "__main__":
     V = data_dict['parameters']['V']
     NE = data_dict['parameters']['numEigenModes']
     NW = data_dict['parameters']['numWeakRegions']
-    N = NE * NW
+    N = NW
     bV = data_dict['parameters']['bV']
     T = data_dict['parameters']['T']
     bF = data_dict['parameters']['bF']
-    import pdb; pdb.set_trace()
+
     # visualization of the optimized pressure results
     ps.init()
 
@@ -58,6 +59,13 @@ if __name__ == "__main__":
     mapping = data_dict['mesh_info']['mapping']
     bvNorms = data_dict['mesh_info']['bvNorms']
     bvAreas = data_dict['mesh_info']['bvAreas']
+    
+    vertexPos = data_dict['mesh_info']['vertexPos']
+    tetFaces = data_dict['mesh_info']['tetFaces']
+    verts = vertexPos.T.copy()
+    tets  = tetFaces.T.copy()
+    eigenvectors = weak_regions['eigenvectors']
+    eigenvector = eigenvectors[:, :, 0]
     
     meshes = []
     for i in ids:
